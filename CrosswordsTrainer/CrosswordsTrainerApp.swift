@@ -11,7 +11,11 @@ import SwiftUI
 struct CrosswordsTrainerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+          KnowledgeChronicleApp()
         }
     }
+}
+
+#Preview {
+  KnowledgeChronicleApp()
 }
