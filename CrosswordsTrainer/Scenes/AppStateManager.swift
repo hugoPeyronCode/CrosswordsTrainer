@@ -34,35 +34,15 @@ class AppStateManager {
 
     // Set up initial game facts (for training mode)
     self.gameViewModel.setupGameWithFacts(Fact.initialFacts)
-
-    // Connect view models
-    setupViewModelConnections()
-  }
-
-  // MARK: - Inter-ViewModel Communication
-
-  private func setupViewModelConnections() {
-    // Connect game completion to progress tracking
-    gameViewModel.onGameCompletion = { [weak self] in
-      guard let self = self, let selectedDay = self.selectedDay else { return }
-      self.progressViewModel.completeDay(selectedDay.id)
-    }
   }
 
   // MARK: - Day Selection
-
-  /// Select a day to play and initialize the game
-  func selectDay(_ day: Day) {
-    selectedDay = day
-    gameViewModel.setupGameWithFacts(day.facts)
-    viewMode = .saga
-  }
 
   /// Check if user can play a particular day
   func canPlayDay(_ day: Day) -> Bool {
     return progressViewModel.isDayAvailable(day)
   }
-  
+
   /// Attempt to unlock a past day using energy
   func tryUnlockDay(_ day: Day) -> Bool {
     return progressViewModel.unlockDay(day)
@@ -70,14 +50,18 @@ class AppStateManager {
 
   // MARK: - Navigation
 
-  /// Return to saga map from game
-  func returnToMap() {
-    viewMode = .saga
-  }
-
   /// Switch to training mode
   func switchToTrainingMode() {
     // Use a default set of facts for training
     gameViewModel.setupGameWithFacts(Fact.initialFacts)
+    viewMode = .train
+  }
+}
+
+// MARK: - Array Extension
+
+extension Array {
+  subscript(safe index: Index) -> Element? {
+    return indices.contains(index) ? self[index] : nil
   }
 }

@@ -25,7 +25,7 @@ struct KnowledgeChronicleApp: View {
           }
         }
         .padding()
-        
+
         // Tab bar
         Picker("View Mode", selection: $appState.viewMode) {
           Text("Map").tag(AppStateManager.ViewMode.saga)
@@ -40,6 +40,10 @@ struct KnowledgeChronicleApp: View {
           }
         }
       }
+    }
+    .onAppear {
+      // Initialize progression tracking when the app appears
+      appState.progressViewModel.checkAndResetDailyProgress()
     }
   }
 }
