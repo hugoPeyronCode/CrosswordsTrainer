@@ -10,13 +10,13 @@ import SwiftUI
 import Observation
 
 struct VerticalScrollingFactsView: View {
-  @Bindable var viewModel: KnowledgeViewModel
-
+  @State var appState: AppStateManager
+  
   var body: some View {
     GeometryReader { screen in
-      TabView(selection: $viewModel.currentFactIndex) {
-        ForEach(Array(viewModel.facts.enumerated()), id: \.element.id) { index, fact in
-          FactClueCell(fact: viewModel.currentFact, viewModel: viewModel)
+      TabView(selection: $appState.gameViewModel.currentFactIndex) {
+        ForEach(Array(appState.gameViewModel.facts.enumerated()), id: \.element.id) { index, fact in
+          FactClueCell(fact: appState.gameViewModel.facts[index], appState: appState)
             .padding()
             .background(Color(.systemBackground))
             .cornerRadius(12)
@@ -31,15 +31,13 @@ struct VerticalScrollingFactsView: View {
       .rotationEffect(.degrees(90), anchor: .topLeading)
       .offset(x: screen.size.width)
       .tabViewStyle(.page(indexDisplayMode: .never))
-      .onChange(of: viewModel.currentFactIndex) { oldValue, newValue in
-        // Update current fact when index changes
-        viewModel.currentFactIndex = newValue
-        viewModel.showAnswer = false
+      .onChange(of: appState.gameViewModel.currentFactIndex) { oldValue, newValue in
+        appState.gameViewModel.showAnswer = false
       }
     }
   }
 }
 
 #Preview {
-  VerticalScrollingFactsView(viewModel: KnowledgeViewModel())
+  VerticalScrollingFactsView(appState: AppStateManager())
 }

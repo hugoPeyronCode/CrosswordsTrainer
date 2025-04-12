@@ -9,37 +9,41 @@ import SwiftUI
 import Observation
 
 struct KnowledgeChronicleApp: View {
-  @State private var viewModel = KnowledgeViewModel()
+  @State var appState: AppStateManager
 
   var body: some View {
     NavigationView {
       VStack(spacing: 0) {
-          Group {
-            if viewModel.viewMode == .train {
-              VerticalScrollingFactsView(viewModel: viewModel)
-                .transition(.opacity)
-            } else {
-
-              SagaMapView()
-                .transition(.opacity)
-
-//              WordGameView(viewModel: viewModel)
-//                .transition(.opacity)
-            }
+        Group {
+          switch appState.viewMode {
+          case .train:
+            VerticalScrollingFactsView(appState: appState)
+              .transition(.opacity)
+          case .saga:
+            SagaMapView(appState: appState)
+              .transition(.opacity)
           }
-          .padding()
-
-        Picker("View Mode", selection: $viewModel.viewMode) {
-          Text("Today").tag(KnowledgeViewModel.ViewMode.wordGame)
-          Text("Train").tag(KnowledgeViewModel.ViewMode.train)
+        }
+        .padding()
+        
+        // Tab bar
+        Picker("View Mode", selection: $appState.viewMode) {
+          Text("Map").tag(AppStateManager.ViewMode.saga)
+          Text("Train").tag(AppStateManager.ViewMode.train)
         }
         .pickerStyle(.segmented)
         .padding(.horizontal)
+        .onChange(of: appState.viewMode) { oldValue, newValue in
+          // Only call switchToTrainingMode when going from a different mode to train
+          if newValue == .train && oldValue != .train {
+            appState.switchToTrainingMode()
+          }
+        }
       }
     }
   }
 }
 
 #Preview {
-  KnowledgeChronicleApp()
+  KnowledgeChronicleApp(appState: AppStateManager())
 }

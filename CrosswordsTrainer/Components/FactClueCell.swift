@@ -11,30 +11,35 @@ import Observation
 
 struct FactClueCell: View {
   let fact: Fact
-  @Bindable var viewModel: KnowledgeViewModel
+  var appState: AppStateManager
   @State private var userInput = ""
-
+  
+  // Access the game view model through the app state
+  private var viewModel: GameViewModel {
+    appState.gameViewModel
+  }
+  
   var answerStatus: AnswerStatus {
     return viewModel.answerStatuses[fact.id] ?? .unanswered
   }
-
+  
   var category: Category {
     return Category.getCategory(by: fact.category)
   }
-
+  
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
       HStack {
         Image(systemName: category.iconName)
           .font(.system(size: 10))
           .foregroundColor(.secondary)
-
+        
         Text(fact.category)
           .font(.caption)
           .foregroundColor(.secondary)
-
+        
         Spacer()
-
+        
         if answerStatus.isAnswered {
           Text("SOLVED")
             .font(.caption2)
@@ -60,14 +65,14 @@ struct FactClueCell: View {
           .offset(y: 1),
         alignment: .bottom
       )
-
+      
       // Clue
       Text(fact.clue)
         .font(.footnote)
         .fontWeight(.medium)
         .foregroundColor(clueTextColor)
         .fixedSize(horizontal: false, vertical: true)
-
+      
       // Answer section
       VStack(alignment: .leading, spacing: 4) {
         if answerStatus.isAnswered {
@@ -93,7 +98,7 @@ struct FactClueCell: View {
           // Letter input boxes
           VStack(alignment: .leading, spacing: 4) {
             VStack(spacing: 4) {
-
+              
               SimplifiedLetterInput(
                 answer: $userInput,
                 wordLength: fact.answer.count,
@@ -102,7 +107,7 @@ struct FactClueCell: View {
                 }
               )
               .padding(10)
-
+              
               HStack {
                 Spacer()
                 Button("Reveal") {
@@ -121,7 +126,7 @@ struct FactClueCell: View {
           }
         }
       }
-
+      
       // Fact explanation when answered
       if (answerStatus.isAnswered || answerStatus.isRevealed || answerStatus.isClose) {
         Text(fact.fact)
@@ -139,7 +144,7 @@ struct FactClueCell: View {
         .stroke(cellBorderColor, lineWidth: 1)
     )
   }
-
+  
   // Dynamic colors based on answer status
   private var cellBackgroundColor: Color {
     switch answerStatus {
@@ -153,7 +158,7 @@ struct FactClueCell: View {
       return Color(.systemBackground)
     }
   }
-
+  
   private var cellBorderColor: Color {
     switch answerStatus {
     case .correct:
@@ -166,7 +171,7 @@ struct FactClueCell: View {
       return Color(.systemGray4)
     }
   }
-
+  
   private var clueTextColor: Color {
     switch answerStatus {
     case .correct:
@@ -179,7 +184,7 @@ struct FactClueCell: View {
       return Color.primary
     }
   }
-
+  
   private var factTextColor: Color {
     switch answerStatus {
     case .correct:
@@ -195,5 +200,8 @@ struct FactClueCell: View {
 }
 
 #Preview {
-  FactClueCell(fact: Fact(id: 10, clue: "Super clue", answer: "test answer", fact: "Same team answer", category: "History"), viewModel: KnowledgeViewModel())
+  FactClueCell(
+    fact: Fact(id: 10, clue: "Super clue", answer: "test answer", fact: "Sample fact explanation", category: "History"), 
+    appState: AppStateManager()
+  )
 }

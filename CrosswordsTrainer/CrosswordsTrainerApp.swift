@@ -9,13 +9,15 @@ import SwiftUI
 
 @main
 struct CrosswordsTrainerApp: App {
+  @State private var appState = AppStateManager()
+  
   var body: some Scene {
     WindowGroup {
-      KnowledgeChronicleApp()
+      KnowledgeChronicleApp(appState: appState)
     }
   }
 }
 
 #Preview {
-  KnowledgeChronicleApp()
+  KnowledgeChronicleApp(appState: AppStateManager())
 }

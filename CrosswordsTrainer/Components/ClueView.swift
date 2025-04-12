@@ -10,8 +10,13 @@ import SwiftUI
 import Observation
 
 struct ClueView: View {
-  @Bindable var viewModel: KnowledgeViewModel
+  var appState: AppStateManager
 
+  // Access the game view model through the app state
+  private var viewModel: GameViewModel {
+    appState.gameViewModel
+  }
+  
   var body: some View {
     VStack {
       // Main card
@@ -19,11 +24,11 @@ struct ClueView: View {
         // Category header
         HStack {
           CategoryIcon(category: Category.getCategory(by: viewModel.currentFact.category))
-
+          
           Text(viewModel.currentFact.category)
             .font(.subheadline)
             .foregroundColor(.secondary)
-
+          
           Spacer()
         }
         .padding(.bottom, 8)
@@ -34,21 +39,21 @@ struct ClueView: View {
             .offset(y: 4),
           alignment: .bottom
         )
-
+        
         // Clue content
         VStack(alignment: .leading, spacing: 8) {
           Text("CLUE:")
             .font(.caption)
             .fontWeight(.bold)
             .foregroundColor(.secondary)
-
+          
           Text(viewModel.currentFact.clue)
             .font(.title3)
             .fontWeight(.medium)
             .foregroundColor(.primary)
             .fixedSize(horizontal: false, vertical: true)
         }
-
+        
         // Show answer button
         Button(action: { viewModel.showAnswer.toggle() }) {
           Text(viewModel.showAnswer ? "Hide Answer" : "Show Answer")
@@ -58,14 +63,14 @@ struct ClueView: View {
             .background(Color(.systemGray6))
             .cornerRadius(8)
         }
-
+        
         // Answer section
         if viewModel.showAnswer {
           VStack(alignment: .leading, spacing: 8) {
             Text("Answer: \(viewModel.currentFact.answer)")
               .fontWeight(.bold)
               .foregroundColor(.primary)
-
+            
             Text("Related fact: \(viewModel.currentFact.fact)")
               .font(.subheadline)
               .foregroundColor(.secondary)
@@ -83,4 +88,8 @@ struct ClueView: View {
       .padding(.horizontal)
     }
   }
+}
+
+#Preview {
+  ClueView(appState: AppStateManager())
 }
