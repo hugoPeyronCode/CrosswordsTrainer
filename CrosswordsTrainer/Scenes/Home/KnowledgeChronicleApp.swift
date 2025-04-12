@@ -19,8 +19,12 @@ struct KnowledgeChronicleApp: View {
               VerticalScrollingFactsView(viewModel: viewModel)
                 .transition(.opacity)
             } else {
-              WordGameView(viewModel: viewModel)
+
+              SagaMapView()
                 .transition(.opacity)
+
+//              WordGameView(viewModel: viewModel)
+//                .transition(.opacity)
             }
           }
           .padding()

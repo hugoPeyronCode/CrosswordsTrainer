@@ -62,6 +62,9 @@ class KnowledgeViewModel {
         answerStatuses[factId] = .close(cleanedUserAnswer)
       }
     }
+
+    checkCompletion()
+
   }
 
   func revealAnswer(for factId: Int) {
@@ -109,5 +112,28 @@ class KnowledgeViewModel {
     }
 
     return matrix[a.count][b.count]
+  }
+
+
+/// SAGAMAP LOGIC
+  // New completion handler for SagaMap integration
+  var onCompletion: (() -> Void)?
+
+  // Track completion status
+  var isCompleted: Bool {
+      // Consider it completed if 80% or more facts are answered correctly
+      let completed = answerStatuses.values.filter {
+          if case .correct = $0 { return true }
+          return false
+      }.count
+
+      return completed >= Int(Double(facts.count) * 0.8)
+  }
+
+  // Call this when appropriate to check if the day is completed
+  func checkCompletion() {
+      if isCompleted {
+          onCompletion?()
+      }
   }
 }

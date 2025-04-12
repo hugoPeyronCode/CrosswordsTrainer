@@ -9,11 +9,11 @@ import SwiftUI
 
 @main
 struct CrosswordsTrainerApp: App {
-    var body: some Scene {
-        WindowGroup {
-          KnowledgeChronicleApp()
-        }
+  var body: some Scene {
+    WindowGroup {
+      KnowledgeChronicleApp()
     }
+  }
 }
 
 #Preview {

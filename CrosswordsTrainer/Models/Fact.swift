@@ -10,7 +10,7 @@ import SwiftUI
 import Observation
 
 /// Fact model containing clues, answers, and facts
-struct Fact: Identifiable {
+struct Fact: Identifiable, Codable {
   let id: Int
   let clue: String
   let answer: String
